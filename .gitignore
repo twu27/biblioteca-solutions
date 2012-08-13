@@ -1,5 +1,10 @@
 .idea/workspace.xml
 .idea/copyright
 .idea/uiDesigner.xml
+.idea/misc.xml
 out/
+biblioteca.jar
+classes
+test-classes
+junit-reports
 
