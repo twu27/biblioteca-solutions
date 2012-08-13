@@ -1,0 +1,55 @@
+<project name="biblioteca" default="package" basedir=".">
+
+    <target name="clean">
+        <delete dir="classes"/>
+        <delete dir="test-classes"/>
+    </target>
+
+    <target name="compile-src">
+        <mkdir dir="classes"/>
+        <javac srcdir="src" destdir="classes"/>
+    </target>
+
+    <target name="compile-test">
+        <mkdir dir="test-classes"/>
+        <javac srcdir="test" destdir="test-classes">
+            <classpath>
+                <path path="classes"/>
+                <path path="lib/junit-4.10.jar"/>
+                <path path="lib/mockito-all-1.9.0.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile-test">
+        <delete dir="junit-reports"/>
+        <mkdir dir="junit-reports"/>
+        <junit printsummary="yes" dir="test-classes" failureProperty="test.failed">
+            <classpath>
+                <path path="classes"/>
+                <path path="test-classes"/>
+                <path path="lib/junit-4.10.jar"/>
+                <path path="lib/mockito-all-1.9.0.jar"/>
+            </classpath>
+            <batchtest fork="yes" todir="junit-reports">
+                <formatter type="xml"/>
+                <fileset dir="test-classes">
+                    <include name="**/*Test.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <fail message="test failed" if="test.failed"/>
+    </target>
+
+    <target name="package" depends="clean, compile-src, test">
+        <jar destfile="bibliotecha.jar" basedir="classes">
+            <manifest>
+                <attribute name="Main-Class" value="com.tw.univ.Application"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="package">
+        <java jar="bibliotecha.jar" fork="true"/>
+    </target>
+</project>
